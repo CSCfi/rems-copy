@@ -67,9 +67,9 @@ rems-copy resources demo test
 ```
 rems-copy workflows demo test
 ```
-### Copy Catalogues
+### Copy Catalogue Items
 ```
-rems-copy catalogues demo test
+rems-copy catalogue demo test
 ```
 ## Order Matters
 Order matters when copying items.
@@ -79,4 +79,4 @@ Order matters when copying items.
 - Workflows depend on forms
 - Catalogue items depend on forms, resources and workflows
 
-Before copying resources or catalogues, copy their dependencies first to avoid errors.
+Before copying resources, workflows or catalogues, copy their dependencies first to avoid errors.
