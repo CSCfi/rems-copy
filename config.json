@@ -1,0 +1,14 @@
+{
+    "demo": {
+        "url": "https://rems-demo.rahtiapp.fi/",
+        "key": "",
+        "username": "",
+        "organisation": "default"
+    },
+    "test": {
+        "url": "https://rems-test.rahtiapp.fi/",
+        "key": "",
+        "username": "",
+        "organisation": "default"
+    }
+}
