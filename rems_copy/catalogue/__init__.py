@@ -30,17 +30,19 @@ def copy_catalogue(config, source, destination):
                     if form["form/internal-name"] == source_form["form/internal-name"]:
                         destination_form_id = form["form/id"]
                         break
-            if sci["formid"] is not None and destination_form_id == None:
-                print(f"could not find form={sci['formid']} from {destination}, skipping this item")
+            if sci["formid"] is not None and destination_form_id is None:
+                print(f"could not find source_form={sci['formid']} from {destination}, skipping this item")
                 break
 
-            source_workflow = get_workflow(config, source, sci["wfid"])
-            destination_workflow_id = 0
-            for workflow in destination_workflows:
-                if workflow["title"] == source_workflow["title"]:
-                    destination_workflow_id = workflow["id"]
-            if destination_workflow_id == 0:
-                print(f"could not find workflow={source_workflow['title']} from {destination}, skipping this item")
+            destination_workflow_id = None
+            if sci["wfid"] is not None:
+                source_workflow = get_workflow(config, source, sci["wfid"])
+                for workflow in destination_workflows:
+                    if workflow["title"] == source_workflow["title"]:
+                        destination_workflow_id = workflow["id"]
+                        break
+            if sci["wfid"] is not None and destination_workflow_id is None:
+                print(f"could not find source_workflow={sci['wfid']} from {destination}, skipping this item")
                 break
 
             catalogue_data = create_catalogue_item_data(
