@@ -4,11 +4,14 @@ import sys
 import json
 import argparse
 
+from requests.api import get
+
 from .licenses import copy_licenses
 from .forms import copy_forms
 from .resources import copy_resources
 from .workflows import copy_workflows
 from .catalogue import copy_catalogue
+from .languages import get_languages
 
 
 def load_config(path):
@@ -29,6 +32,7 @@ def parse_arguments(arguments):
     parser.add_argument("source", help="source environment where items are downloaded from")
     parser.add_argument("destination", help="destination environment where items are uploaded to")
     parser.add_argument("-c", "--config", default="config.json", help="path to JSON configuration file, default='./config.json'")
+    parser.add_argument("-l", "--language", default="en", help="two letter language code, which is used for matching item titles, default='en'")
     if len(sys.argv) <= 1:
         parser.print_help()
         sys.exit(0)
@@ -39,6 +43,15 @@ def main(arguments=None):
     """Run script."""
     a = parse_arguments(arguments)
     config = load_config(a.config)
+
+    # Verify chosen language
+    source_languages = get_languages(config, a.source)
+    destination_languages = get_languages(config, a.destination)
+    if a.language not in source_languages:
+        sys.exit(f"language={a.language} is not supported by env={a.source}")
+    if a.language not in destination_languages:
+        sys.exit(f"language={a.language} is not supported by env={a.destination}")
+    config["language"] = a.language
 
     if a.items == "licenses":
         copy_licenses(config, a.source, a.destination)

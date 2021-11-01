@@ -12,7 +12,7 @@ def copy_catalogue(config, source, destination):
     """Copy catalogues from source to destination if name doesn't already exist in destination."""
     source_catalogue_items = get_catalogue_items(config, source)
     destination_catalogue_items = get_catalogue_items(config, destination)
-    destination_catalogue_item_names = [dci["localizations"]["en"]["title"] for dci in destination_catalogue_items]
+    destination_catalogue_item_names = [dci["localizations"][config["language"]]["title"] for dci in destination_catalogue_items]
     destination_forms = get_forms(config, destination)
     destination_resources = get_resources(config, destination)
     destination_workflows = get_workflows(config, destination)
@@ -23,7 +23,7 @@ def copy_catalogue(config, source, destination):
     for i, sci in enumerate(source_catalogue_items):
         sys.stdout.write(f"\rcopying catalogue items {i+1}/{len(source_catalogue_items)}")
         sys.stdout.flush()
-        if sci["localizations"]["en"]["title"] not in destination_catalogue_item_names:
+        if sci["localizations"][config["language"]]["title"] not in destination_catalogue_item_names:
 
             destination_form_id = None
             if sci["formid"] is not None:
@@ -67,9 +67,9 @@ def copy_catalogue(config, source, destination):
                 titles=sci["localizations"],
             )
             post_catalogue_item(config, catalogue_data, destination)
-            created.append(sci["localizations"]["en"]["title"])
+            created.append(sci["localizations"][config["language"]]["title"])
         else:
-            skipped.append(sci["localizations"]["en"]["title"])
+            skipped.append(sci["localizations"][config["language"]]["title"])
 
     print(f"\nskipped catalogue items that already exist at {destination}: {skipped}")
     print(f"\ncreated new catalogue items at {destination}: {created}")

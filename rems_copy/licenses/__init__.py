@@ -8,7 +8,7 @@ def copy_licenses(config, source, destination):
     """Copy licenses from source to destination if name doesn't already exist in destination."""
     source_licenses = get_licenses(config, source)
     destination_licenses = get_licenses(config, destination)
-    destination_license_names = [dl["localizations"]["en"]["title"] for dl in destination_licenses]
+    destination_license_names = [dl["localizations"][config["language"]]["title"] for dl in destination_licenses]
 
     skipped = []
     created = []
@@ -21,12 +21,12 @@ def copy_licenses(config, source, destination):
     for i, sl in enumerate(source_licenses):
         sys.stdout.write(f"\rcopying licenses {i+1}/{len(source_licenses)}")
         sys.stdout.flush()
-        if sl["localizations"]["en"]["title"] not in destination_license_names:
+        if sl["localizations"][config["language"]]["title"] not in destination_license_names:
             license_data = download_license(config, source, sl["id"])
             post_license(config, license_data, destination)
-            created.append(sl["localizations"]["en"]["title"])
+            created.append(sl["localizations"][config["language"]]["title"])
         else:
-            skipped.append(sl["localizations"]["en"]["title"])
+            skipped.append(sl["localizations"][config["language"]]["title"])
 
     print(f"\nskipped licenses that already exist at {destination}: {skipped}")
     print(f"\ncreated new licenses at {destination}: {created}")

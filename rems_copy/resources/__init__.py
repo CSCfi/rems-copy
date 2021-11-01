@@ -14,7 +14,7 @@ def copy_resources(config, source, destination):
     destination_licenses = get_licenses(config, destination)
     destination_licenses_dict = {}
     for dl in destination_licenses:
-        destination_licenses_dict[dl["localizations"]["en"]["title"]] = dl["id"]
+        destination_licenses_dict[dl["localizations"][config["language"]]["title"]] = dl["id"]
 
     skipped = []
     created = []
@@ -24,6 +24,7 @@ def copy_resources(config, source, destination):
         sys.stdout.flush()
         if sr["resid"] not in destination_resource_names:
             resource_data = create_resource_data(
+                config=config,
                 resource=sr["resid"],
                 organisation=config[source]["organisation"],
                 resource_licenses=sr["licenses"],
@@ -38,12 +39,12 @@ def copy_resources(config, source, destination):
     print(f"\ncreated new resources at {destination}: {created}")
 
 
-def create_resource_data(resource="", organisation="", resource_licenses=[], destination_licenses={}):
+def create_resource_data(config={}, resource="", organisation="", resource_licenses=[], destination_licenses={}):
     """Create resource payload."""
     payload = {
         "resid": resource,
         "organization": {"organization/id": organisation},
-        "licenses": [destination_licenses[rl["localizations"]["en"]["title"]] for rl in resource_licenses],
+        "licenses": [destination_licenses[rl["localizations"][config["language"]]["title"]] for rl in resource_licenses],
     }
     return payload
 

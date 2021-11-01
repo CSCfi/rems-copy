@@ -10,7 +10,9 @@ pip install .
 ## Usage
 ```
 rems-copy
-usage: rems-copy [-h] [-c CONFIG] {licenses,forms,resources,workflows,catalogue,all} source destination
+usage: rems-copy [-h] [-c CONFIG] [-l LANGUAGE]
+               {licenses,forms,resources,workflows,catalogue,all} source
+               destination
 
 This tool copies REMS items from one instance to another
 
@@ -23,7 +25,11 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
-                        path to JSON configuration file, default='./config.json'
+                        path to JSON configuration file,
+                        default='./config.json'
+  -l LANGUAGE, --language LANGUAGE
+                        two letter language code, which is used for matching
+                        item titles, default='en'
 ```
 
 ## Configuration
@@ -49,7 +55,7 @@ When using the tool, the `source` and `destination` arguments refer to the objec
 ## Examples
 ### Action
 ```
-rems-copy <items-to-copy> <from> <to> --config <path>
+rems-copy <items-to-copy> <from> <to> --config <path> --language <lang>
 ```
 ### Copy Licenses
 ```
