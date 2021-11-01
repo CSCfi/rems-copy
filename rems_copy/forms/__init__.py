@@ -96,17 +96,13 @@ def get_forms(c, env):
 
 def get_form(c, env, form_id):
     """Get specific form."""
-    params = {
-        "disabled": "false",
-        "archived": "false",
-    }
     headers = {
         "accept": "application/json",
         "x-rems-api-key": c[env]["key"],
         "x-rems-user-id": c[env]["username"],
     }
     try:
-        response = requests.get(c[env]["url"].rstrip("/") + f"/api/forms/{form_id}", headers=headers, params=params)
+        response = requests.get(c[env]["url"].rstrip("/") + f"/api/forms/{form_id}", headers=headers)
     except Exception as e:
         sys.exit(f"ERROR: get_form({env}), {e}")
 

@@ -96,17 +96,13 @@ def get_workflows(c, env):
 
 def get_workflow(c, env, workflow_id):
     """Get specific workflow."""
-    params = {
-        "disabled": "false",
-        "archived": "false",
-    }
     headers = {
         "accept": "application/json",
         "x-rems-api-key": c[env]["key"],
         "x-rems-user-id": c[env]["username"],
     }
     try:
-        response = requests.get(c[env]["url"].rstrip("/") + f"/api/workflows/{workflow_id}", headers=headers, params=params)
+        response = requests.get(c[env]["url"].rstrip("/") + f"/api/workflows/{workflow_id}", headers=headers)
     except Exception as e:
         sys.exit(f"ERROR: get_workflow({env}), {e}")
 

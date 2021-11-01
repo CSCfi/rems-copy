@@ -23,14 +23,15 @@ def copy_catalogue(config, source, destination):
         sys.stdout.flush()
         if sci["localizations"]["en"]["title"] not in destination_catalogue_item_names:
 
-            source_form = get_form(config, source, sci["formid"])
-            destination_form_id = 0
-            for form in destination_forms:
-                if form["form/internal-name"] == source_form["form/internal-name"]:
-                    destination_form_id = form["form/id"]
-                    break
-            if destination_form_id == 0:
-                print(f"could not find form={source_form['form/internal-name']} from {destination}, skipping this item")
+            destination_form_id = None
+            if sci["formid"] is not None:
+                source_form = get_form(config, source, sci["formid"])
+                for form in destination_forms:
+                    if form["form/internal-name"] == source_form["form/internal-name"]:
+                        destination_form_id = form["form/id"]
+                        break
+            if sci["formid"] is not None and destination_form_id == None:
+                print(f"could not find form={sci['formid']} from {destination}, skipping this item")
                 break
 
             source_workflow = get_workflow(config, source, sci["wfid"])
