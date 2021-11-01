@@ -87,3 +87,21 @@ def get_resources(c, env):
         return response.json()
     else:
         sys.exit(f"ABORT: get_resources({env}) responded with {str(response.status_code)}")
+
+
+def get_resource(c, env, resource_id):
+    """Get specific resources."""
+    headers = {
+        "accept": "application/json",
+        "x-rems-api-key": c[env]["key"],
+        "x-rems-user-id": c[env]["username"],
+    }
+    try:
+        response = requests.get(c[env]["url"].rstrip("/") + f"/api/resources/{resource_id}", headers=headers)
+    except Exception as e:
+        sys.exit(f"ERROR: get_resource({env}), {e}")
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        sys.exit(f"ABORT: get_resource({env}) responded with {str(response.status_code)}")

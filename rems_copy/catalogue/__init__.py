@@ -5,6 +5,7 @@ import requests
 
 from ..forms import get_form, get_forms
 from ..workflows import get_workflow, get_workflows
+from ..resources import get_resource, get_resources
 
 
 def copy_catalogue(config, source, destination):
@@ -13,6 +14,7 @@ def copy_catalogue(config, source, destination):
     destination_catalogue_items = get_catalogue_items(config, destination)
     destination_catalogue_item_names = [dci["localizations"]["en"]["title"] for dci in destination_catalogue_items]
     destination_forms = get_forms(config, destination)
+    destination_resources = get_resources(config, destination)
     destination_workflows = get_workflows(config, destination)
 
     skipped = []
@@ -34,6 +36,18 @@ def copy_catalogue(config, source, destination):
                 print(f"could not find source_form={sci['formid']} from {destination}, skipping this item")
                 break
 
+            destination_resource_id = None
+            if sci["resource-id"] is not None:
+                source_resource = get_resource(config, source, sci["resource-id"])
+                for resource in destination_resources:
+                    if resource["resid"] == source_resource["resid"]:
+                        destination_resource_id = resource["id"]
+                        break
+            if sci["resource-id"] is not None and destination_resource_id is None:
+                print(f"could not find source_resource={sci['resource-id']} from {destination}, skipping this item")
+                break
+
+
             destination_workflow_id = None
             if sci["wfid"] is not None:
                 source_workflow = get_workflow(config, source, sci["wfid"])
@@ -47,7 +61,7 @@ def copy_catalogue(config, source, destination):
 
             catalogue_data = create_catalogue_item_data(
                 form_id=destination_form_id,
-                resource_id=sci["resource-id"],
+                resource_id=destination_resource_id,
                 workflow_id=destination_workflow_id,
                 organisation=config[destination]["organisation"],
                 titles=sci["localizations"],
