@@ -10,12 +10,12 @@ pip install .
 ## Usage
 ```
 rems-copy
-usage: rems-copy [-h] [-c CONFIG] {licenses,forms,resources,workflows,catalogue} source destination
+usage: rems-copy [-h] [-c CONFIG] {licenses,forms,resources,workflows,catalogue,all} source destination
 
 This tool copies REMS items from one instance to another
 
 positional arguments:
-  {licenses,forms,resources,workflows,catalogue}
+  {licenses,forms,resources,workflows,catalogue,all}
                         items to move
   source                source environment where items are downloaded from
   destination           destination environment where items are uploaded to
