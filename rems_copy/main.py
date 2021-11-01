@@ -25,7 +25,7 @@ def load_config(path):
 def parse_arguments(arguments):
     """Parse command line arguments and options."""
     parser = argparse.ArgumentParser(description="This tool copies REMS items from one instance to another")
-    parser.add_argument("items", choices=["licenses", "forms", "resources", "workflows", "catalogue"], help="items to move")
+    parser.add_argument("items", choices=["licenses", "forms", "resources", "workflows", "catalogue", "all"], help="items to move")
     parser.add_argument("source", help="source environment where items are downloaded from")
     parser.add_argument("destination", help="destination environment where items are uploaded to")
     parser.add_argument("-c", "--config", default="config.json", help="path to JSON configuration file, default='./config.json'")
@@ -49,6 +49,12 @@ def main(arguments=None):
     if a.items == "workflows":
         copy_workflows(config, a.source, a.destination)
     if a.items == "catalogue":
+        copy_catalogue(config, a.source, a.destination)
+    if a.items == "all":
+        copy_licenses(config, a.source, a.destination)
+        copy_forms(config, a.source, a.destination)
+        copy_resources(config, a.source, a.destination)
+        copy_workflows(config, a.source, a.destination)
         copy_catalogue(config, a.source, a.destination)
 
 

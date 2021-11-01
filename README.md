@@ -71,6 +71,11 @@ rems-copy workflows demo test
 ```
 rems-copy catalogue demo test
 ```
+### Copy Everything
+This command runs all of the commands above in the correct order.
+```
+rems-copy all demo test
+```
 ## Order Matters
 Order matters when copying items.
 - Licenses are standalone
