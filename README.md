@@ -1,5 +1,5 @@
 # REMS Copy
-This tool can be used to copy licenses, forms, resources, workflows and catalogue items from one [REMS](https://github.com/cscfi/rems) environment to another.
+This tool can be used to copy licenses, forms, resources, workflows, catalogue items and categories from one [REMS](https://github.com/cscfi/rems) environment to another.
 
 ## Installation
 ```
@@ -17,7 +17,7 @@ usage: rems-copy [-h] [-c CONFIG] [-l LANGUAGE]
 This tool copies REMS items from one instance to another
 
 positional arguments:
-  {licenses,forms,resources,workflows,catalogue,all}
+  {licenses,forms,resources,workflows,catalogue,categories,all}
                         items to move
   source                source environment where items are downloaded from
   destination           destination environment where items are uploaded to
@@ -77,6 +77,10 @@ rems-copy workflows demo test
 ```
 rems-copy catalogue demo test
 ```
+### Copy Catalogue Items
+```
+rems-copy categories demo test
+```
 ### Copy Everything
 This command runs all of the commands above in the correct order.
 ```
@@ -89,5 +93,6 @@ Order matters when copying items.
 - Resources depend on licenses
 - Workflows depend on forms
 - Catalogue items depend on forms, resources and workflows
+- Categories depend on catalogue items
 
-Before copying resources, workflows or catalogues, copy their dependencies first to avoid errors.
+Copy dependencies of items first to avoid errors.

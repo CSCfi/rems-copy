@@ -36,7 +36,7 @@ def copy_workflows(config, source, destination):
             skipped.append(sw["title"])
 
     print(f"\nskipped workflows that already exist at {destination}: {skipped}")
-    print(f"\ncreated new workflows at {destination}: {created}")
+    print(f"created new workflows at {destination}: {created}")
 
 
 def create_workflow_data(title="", organisation="", workflow_type="", workflow_forms=[], destination_forms={}):

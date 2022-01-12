@@ -72,7 +72,7 @@ def copy_catalogue(config, source, destination):
             skipped.append(sci["localizations"][config["language"]]["title"])
 
     print(f"\nskipped catalogue items that already exist at {destination}: {skipped}")
-    print(f"\ncreated new catalogue items at {destination}: {created}")
+    print(f"created new catalogue items at {destination}: {created}")
 
 
 def create_catalogue_item_data(form_id=0, resource_id=0, workflow_id=0, organisation="", titles={}):
@@ -113,6 +113,25 @@ def post_catalogue_item(c, catalogue, env):
         sys.exit(f"ABORT: post_catalogue_item() responded with {str(response.status_code)}, {response.text}")
 
 
+def put_catalogue_item(c, env, catalogue):
+    """Put (update) catalogue to environment."""
+
+    headers = {
+        "x-rems-api-key": c[env]["key"],
+        "x-rems-user-id": c[env]["username"],
+    }
+    try:
+        response = requests.put(c[env]["url"].rstrip("/") + "/api/catalogue-items/edit", headers=headers, json=catalogue)
+    except Exception as e:
+        sys.exit(f"ERROR: post_catalogue_item(), {e}")
+
+    if response.status_code == 200:
+        pass
+    else:
+        sys.exit(f"ABORT: post_catalogue_item() responded with {str(response.status_code)}, {response.text}")
+
+
+
 def get_catalogue_items(c, env):
     """Get available catalogue items."""
     print(f"downloading catalogue items from {env}")
@@ -134,3 +153,36 @@ def get_catalogue_items(c, env):
         return response.json()
     else:
         sys.exit(f"ABORT: get_catalogue_items({env}) responded with {str(response.status_code)}")
+
+
+def get_catalogue_item(c, env, catalogue_id):
+    """Get specific catalogue items."""
+
+    headers = {
+        "accept": "application/json",
+        "x-rems-api-key": c[env]["key"],
+        "x-rems-user-id": c[env]["username"],
+    }
+    try:
+        response = requests.get(c[env]["url"].rstrip("/") + f"/api/catalogue-items/{catalogue_id}", headers=headers)
+    except Exception as e:
+        sys.exit(f"ERROR: get_catalogue_item({env}), {e}")
+
+    if response.status_code == 200:
+        return response.json()
+    else:
+        sys.exit(f"ABORT: get_catalogue_item({env}) responded with {str(response.status_code)}")
+
+
+def create_catalogue_item_id_translator(c, source_catalogue_items, destination_catalogue_items):
+    """Create a translation book for converting source catalogue item id to destination catalogue item id."""
+
+    translator = {}
+
+    for sci in source_catalogue_items:
+        for dci in destination_catalogue_items:
+            if sci["localizations"][c["language"]]["title"] == dci["localizations"][c["language"]]["title"]:
+                translator[sci["id"]] = dci["id"]
+                break
+
+    return translator

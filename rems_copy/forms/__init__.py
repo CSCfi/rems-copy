@@ -24,7 +24,7 @@ def copy_forms(config, source, destination):
             skipped.append(sf["form/title"])
 
     print(f"\nskipped forms that already exist at {destination}: {skipped}")
-    print(f"\ncreated new forms at {destination}: {created}")
+    print(f"created new forms at {destination}: {created}")
 
 
 def download_form(c, env, identifier):

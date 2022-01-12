@@ -29,7 +29,7 @@ def copy_licenses(config, source, destination):
             skipped.append(sl["localizations"][config["language"]]["title"])
 
     print(f"\nskipped licenses that already exist at {destination}: {skipped}")
-    print(f"\ncreated new licenses at {destination}: {created}")
+    print(f"created new licenses at {destination}: {created}")
 
 
 def download_license(c, env, identifier):

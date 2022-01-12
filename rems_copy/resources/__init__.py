@@ -36,7 +36,7 @@ def copy_resources(config, source, destination):
             skipped.append(sr["resid"])
 
     print(f"\nskipped resources that already exist at {destination}: {skipped}")
-    print(f"\ncreated new resources at {destination}: {created}")
+    print(f"created new resources at {destination}: {created}")
 
 
 def create_resource_data(config={}, resource="", organisation="", resource_licenses=[], destination_licenses={}):
