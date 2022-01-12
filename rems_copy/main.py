@@ -4,8 +4,6 @@ import sys
 import json
 import argparse
 
-from requests.api import get
-
 from .licenses import copy_licenses
 from .forms import copy_forms
 from .resources import copy_resources

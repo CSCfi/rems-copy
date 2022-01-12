@@ -94,7 +94,6 @@ def copy_categories(config, source, destination):
     print(f"updated catalogue items with categories at {destination}: {updated}")
 
 
-
 def get_categories(c, env):
     """Get available categories."""
     print(f"downloading categories from {env}")
@@ -117,7 +116,6 @@ def get_categories(c, env):
 
 def create_category_id_translator(c, source_categories, destination_categories):
     """Create a translation book for converting source category id to destination category id."""
-
     translator = {}
 
     for sc in source_categories:
@@ -131,7 +129,6 @@ def create_category_id_translator(c, source_categories, destination_categories):
 
 def post_category(c, env, category):
     """Post category to environment."""
-
     # Make children empty, update them later
     category["category/children"] = []
     # Remove disallowed key
@@ -154,7 +151,6 @@ def post_category(c, env, category):
 
 def update_category_children(c, env, category):
     """Update category children."""
-
     headers = {
         "x-rems-api-key": c[env]["key"],
         "x-rems-user-id": c[env]["username"],

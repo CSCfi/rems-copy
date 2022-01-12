@@ -12,7 +12,7 @@ def get_languages(c, env):
         "x-rems-user-id": c[env]["username"],
     }
     try:
-        response = requests.get(c[env]["url"].rstrip("/") + f"/api/config", headers=headers)
+        response = requests.get(c[env]["url"].rstrip("/") + "/api/config", headers=headers)
     except Exception as e:
         sys.exit(f"ERROR: get_languages({env}), {e}")
 

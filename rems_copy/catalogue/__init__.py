@@ -47,7 +47,6 @@ def copy_catalogue(config, source, destination):
                 print(f"could not find source_resource={sci['resource-id']} from {destination}, skipping this item")
                 break
 
-
             destination_workflow_id = None
             if sci["wfid"] is not None:
                 source_workflow = get_workflow(config, source, sci["wfid"])
@@ -115,7 +114,6 @@ def post_catalogue_item(c, catalogue, env):
 
 def put_catalogue_item(c, env, catalogue):
     """Put (update) catalogue to environment."""
-
     headers = {
         "x-rems-api-key": c[env]["key"],
         "x-rems-user-id": c[env]["username"],
@@ -129,7 +127,6 @@ def put_catalogue_item(c, env, catalogue):
         pass
     else:
         sys.exit(f"ABORT: post_catalogue_item() responded with {str(response.status_code)}, {response.text}")
-
 
 
 def get_catalogue_items(c, env):
@@ -157,7 +154,6 @@ def get_catalogue_items(c, env):
 
 def get_catalogue_item(c, env, catalogue_id):
     """Get specific catalogue items."""
-
     headers = {
         "accept": "application/json",
         "x-rems-api-key": c[env]["key"],
@@ -176,7 +172,6 @@ def get_catalogue_item(c, env, catalogue_id):
 
 def create_catalogue_item_id_translator(c, source_catalogue_items, destination_catalogue_items):
     """Create a translation book for converting source catalogue item id to destination catalogue item id."""
-
     translator = {}
 
     for sci in source_catalogue_items:

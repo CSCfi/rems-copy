@@ -77,7 +77,7 @@ rems-copy workflows demo test
 ```
 rems-copy catalogue demo test
 ```
-### Copy Catalogue Items
+### Copy Categories
 ```
 rems-copy categories demo test
 ```
