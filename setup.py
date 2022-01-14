@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="rems-copy",
-    version="0.2.1",
+    version="0.2.2",
     description="Copies REMS licenses, resources, forms and catalogue items from one environment to another",
     author="CSC - IT Center for Science",
     classifiers=[
