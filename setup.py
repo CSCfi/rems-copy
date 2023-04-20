@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="rems-copy",
-    version="0.2.2",
+    version="0.3.0",
     description="Copies REMS licenses, resources, forms and catalogue items from one environment to another",
     author="CSC - IT Center for Science",
     classifiers=[
@@ -12,7 +12,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
         "License :: OSI Approved :: Apache Software License",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.10",
     ],
     packages=[
         "rems_copy",
