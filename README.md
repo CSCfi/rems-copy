@@ -30,6 +30,8 @@ optional arguments:
   -l LANGUAGE, --language LANGUAGE
                         two letter language code, which is used for matching
                         item titles, default='en'
+  --check               execute script as a dry run to see what would happen,
+                        without changing data in REMS
 ```
 
 ## Configuration
