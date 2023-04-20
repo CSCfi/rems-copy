@@ -4,7 +4,7 @@ import sys
 import requests
 
 
-def copy_forms(config, source, destination):
+def copy_forms(config, source, destination, check):
     """Copy forms from source to destination if name doesn't already exist in destination."""
     source_forms = get_forms(config, source)
     destination_forms = get_forms(config, destination)
@@ -17,8 +17,9 @@ def copy_forms(config, source, destination):
         sys.stdout.write(f"\rcopying forms {i+1}/{len(source_forms)}")
         sys.stdout.flush()
         if sf["form/internal-name"] not in destination_form_names:
-            form_data = download_form(config, source, sf["form/id"])
-            post_form(config, form_data, destination)
+            if not check:
+                form_data = download_form(config, source, sf["form/id"])
+                post_form(config, form_data, destination)
             created.append(sf["form/internal-name"])
         else:
             skipped.append(sf["form/internal-name"])

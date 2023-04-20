@@ -6,7 +6,7 @@ import requests
 from ..forms import get_forms
 
 
-def copy_workflows(config, source, destination):
+def copy_workflows(config, source, destination, check):
     """Copy workflows from source to destination if name doesn't already exist in destination."""
     source_workflows = get_workflows(config, source)
     destination_workflows = get_workflows(config, destination)
@@ -23,14 +23,15 @@ def copy_workflows(config, source, destination):
         sys.stdout.write(f"\rcopying workflows {i+1}/{len(source_workflows)}")
         sys.stdout.flush()
         if sw["title"] not in destination_workflow_names:
-            workflow_data = create_workflow_data(
-                title=sw["title"],
-                organisation=config[source]["organisation"],
-                workflow_type=sw["workflow"]["type"],
-                workflow_forms=sw["workflow"]["forms"],
-                destination_forms=destination_forms_dict,
-            )
-            post_workflow(config, workflow_data, destination)
+            if not check:
+                workflow_data = create_workflow_data(
+                    title=sw["title"],
+                    organisation=config[source]["organisation"],
+                    workflow_type=sw["workflow"]["type"],
+                    workflow_forms=sw["workflow"]["forms"],
+                    destination_forms=destination_forms_dict,
+                )
+                post_workflow(config, workflow_data, destination)
             created.append(sw["title"])
         else:
             skipped.append(sw["title"])

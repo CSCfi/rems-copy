@@ -32,6 +32,7 @@ def parse_arguments(arguments):
     parser.add_argument("destination", help="destination environment where items are uploaded to")
     parser.add_argument("-c", "--config", default="config.json", help="path to JSON configuration file, default='./config.json'")
     parser.add_argument("-l", "--language", default="en", help="two letter language code, which is used for matching item titles, default='en'")
+    parser.add_argument("--check", action="store_true", help="execute script as a dry run to see what would happen, without changing data in REMS")
     if len(sys.argv) <= 1:
         parser.print_help()
         sys.exit(0)
@@ -43,6 +44,10 @@ def main(arguments=None):
     a = parse_arguments(arguments)
     config = load_config(a.config)
 
+    # Dry run check
+    if a.check:
+        print("DRY RUN ENABLED\nData will be downloaded, but not uploaded")
+
     # Verify chosen language
     source_languages = get_languages(config, a.source)
     destination_languages = get_languages(config, a.destination)
@@ -53,24 +58,24 @@ def main(arguments=None):
     config["language"] = a.language
 
     if a.items == "licenses":
-        copy_licenses(config, a.source, a.destination)
+        copy_licenses(config, a.source, a.destination, a.check)
     if a.items == "forms":
-        copy_forms(config, a.source, a.destination)
+        copy_forms(config, a.source, a.destination, a.check)
     if a.items == "resources":
-        copy_resources(config, a.source, a.destination)
+        copy_resources(config, a.source, a.destination, a.check)
     if a.items == "workflows":
-        copy_workflows(config, a.source, a.destination)
+        copy_workflows(config, a.source, a.destination, a.check)
     if a.items == "catalogue":
-        copy_catalogue(config, a.source, a.destination)
+        copy_catalogue(config, a.source, a.destination, a.check)
     if a.items == "categories":
-        copy_categories(config, a.source, a.destination)
+        copy_categories(config, a.source, a.destination, a.check)
     if a.items == "all":
-        copy_licenses(config, a.source, a.destination)
-        copy_forms(config, a.source, a.destination)
-        copy_resources(config, a.source, a.destination)
-        copy_workflows(config, a.source, a.destination)
-        copy_catalogue(config, a.source, a.destination)
-        copy_categories(config, a.source, a.destination)
+        copy_licenses(config, a.source, a.destination, a.check)
+        copy_forms(config, a.source, a.destination, a.check)
+        copy_resources(config, a.source, a.destination, a.check)
+        copy_workflows(config, a.source, a.destination, a.check)
+        copy_catalogue(config, a.source, a.destination, a.check)
+        copy_categories(config, a.source, a.destination, a.check)
 
 
 if __name__ == "__main__":

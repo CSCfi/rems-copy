@@ -6,7 +6,7 @@ import requests
 from ..licenses import get_licenses
 
 
-def copy_resources(config, source, destination):
+def copy_resources(config, source, destination, check):
     """Copy resources from source to destination if name doesn't already exist in destination."""
     source_resources = get_resources(config, source)
     destination_resources = get_resources(config, destination)
@@ -23,14 +23,15 @@ def copy_resources(config, source, destination):
         sys.stdout.write(f"\rcopying resources {i+1}/{len(source_resources)}")
         sys.stdout.flush()
         if sr["resid"] not in destination_resource_names:
-            resource_data = create_resource_data(
-                config=config,
-                resource=sr["resid"],
-                organisation=config[source]["organisation"],
-                resource_licenses=sr["licenses"],
-                destination_licenses=destination_licenses_dict,
-            )
-            post_resource(config, resource_data, destination)
+            if not check:
+                resource_data = create_resource_data(
+                    config=config,
+                    resource=sr["resid"],
+                    organisation=config[source]["organisation"],
+                    resource_licenses=sr["licenses"],
+                    destination_licenses=destination_licenses_dict,
+                )
+                post_resource(config, resource_data, destination)
             created.append(sr["resid"])
         else:
             skipped.append(sr["resid"])

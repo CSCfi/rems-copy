@@ -4,7 +4,7 @@ import sys
 import requests
 
 
-def copy_licenses(config, source, destination):
+def copy_licenses(config, source, destination, check):
     """Copy licenses from source to destination if name doesn't already exist in destination."""
     source_licenses = get_licenses(config, source)
     destination_licenses = get_licenses(config, destination)
@@ -22,8 +22,9 @@ def copy_licenses(config, source, destination):
         sys.stdout.write(f"\rcopying licenses {i+1}/{len(source_licenses)}")
         sys.stdout.flush()
         if sl["localizations"][config["language"]]["title"] not in destination_license_names:
-            license_data = download_license(config, source, sl["id"])
-            post_license(config, license_data, destination)
+            if not check:
+                license_data = download_license(config, source, sl["id"])
+                post_license(config, license_data, destination)
             created.append(sl["localizations"][config["language"]]["title"])
         else:
             skipped.append(sl["localizations"][config["language"]]["title"])

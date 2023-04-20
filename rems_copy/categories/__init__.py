@@ -6,7 +6,7 @@ import requests
 from ..catalogue import get_catalogue_items, get_catalogue_item, create_catalogue_item_id_translator, put_catalogue_item
 
 
-def copy_categories(config, source, destination):
+def copy_categories(config, source, destination, check):
     """Copy categories from source to destination if name doesn't already exist in destination and update categories to catalogue items."""
     source_categories = get_categories(config, source)
     destination_categories = get_categories(config, destination)
@@ -21,7 +21,8 @@ def copy_categories(config, source, destination):
         sys.stdout.write(f"\rcopying categories {i+1}/{len(source_categories)}")
         sys.stdout.flush()
         if sc["category/title"][config["language"]] not in destination_category_names:
-            post_category(config, destination, sc)
+            if not check:
+                post_category(config, destination, sc)
             created.append(sc["category/title"][config["language"]])
         else:
             skipped.append(sc["category/title"][config["language"]])
@@ -49,7 +50,8 @@ def copy_categories(config, source, destination):
             for dc in destination_categories:
                 if category_id_translator[sc["category/id"]] == dc["category/id"]:
                     dc["category/children"] = destination_children
-                    update_category_children(config, destination, dc)
+                    if not check:
+                        update_category_children(config, destination, dc)
                     break
             updated.append(sc["category/title"][config["language"]])
         else:
@@ -72,20 +74,21 @@ def copy_categories(config, source, destination):
         sys.stdout.flush()
         source_catalogue_item = get_catalogue_item(config, source, sci["id"])
         if len(source_catalogue_item["categories"]):
-            destination_catalogue_item = get_catalogue_item(config, destination, catalogue_item_id_translator[sci["id"]])
-            # Parse categories
-            categories = [{"category/id": category_id_translator[scic["category/id"]]} for scic in source_catalogue_item["categories"]]
-            # Get mandatory titles and remove disallowed keys
-            localizations = destination_catalogue_item["localizations"]
-            for _, localization in localizations.items():
-                del localization["id"]
-                del localization["langcode"]
-            new_catalogue_item = {
-                "id": destination_catalogue_item["id"],
-                "localizations": localizations,
-                "categories": categories
-            }
-            put_catalogue_item(config, destination, new_catalogue_item)
+            if not check:
+                destination_catalogue_item = get_catalogue_item(config, destination, catalogue_item_id_translator[sci["id"]])
+                # Parse categories
+                categories = [{"category/id": category_id_translator[scic["category/id"]]} for scic in source_catalogue_item["categories"]]
+                # Get mandatory titles and remove disallowed keys
+                localizations = destination_catalogue_item["localizations"]
+                for _, localization in localizations.items():
+                    del localization["id"]
+                    del localization["langcode"]
+                new_catalogue_item = {
+                    "id": destination_catalogue_item["id"],
+                    "localizations": localizations,
+                    "categories": categories
+                }
+                put_catalogue_item(config, destination, new_catalogue_item)
             updated.append(sci["localizations"][config["language"]]["title"])
         else:
             skipped.append(sci["localizations"][config["language"]]["title"])

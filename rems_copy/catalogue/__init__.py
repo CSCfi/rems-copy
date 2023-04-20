@@ -8,7 +8,7 @@ from ..workflows import get_workflow, get_workflows
 from ..resources import get_resource, get_resources
 
 
-def copy_catalogue(config, source, destination):
+def copy_catalogue(config, source, destination, check):
     """Copy catalogues from source to destination if name doesn't already exist in destination."""
     source_catalogue_items = get_catalogue_items(config, source)
     destination_catalogue_items = get_catalogue_items(config, destination)
@@ -24,48 +24,48 @@ def copy_catalogue(config, source, destination):
         sys.stdout.write(f"\rcopying catalogue items {i+1}/{len(source_catalogue_items)}")
         sys.stdout.flush()
         if sci["localizations"][config["language"]]["title"] not in destination_catalogue_item_names:
+            if not check:
+                destination_form_id = None
+                if sci["formid"] is not None:
+                    source_form = get_form(config, source, sci["formid"])
+                    for form in destination_forms:
+                        if form["form/internal-name"] == source_form["form/internal-name"]:
+                            destination_form_id = form["form/id"]
+                            break
+                if sci["formid"] is not None and destination_form_id is None:
+                    print(f"could not find source_form={sci['formid']} from {destination}, skipping this item")
+                    break
 
-            destination_form_id = None
-            if sci["formid"] is not None:
-                source_form = get_form(config, source, sci["formid"])
-                for form in destination_forms:
-                    if form["form/internal-name"] == source_form["form/internal-name"]:
-                        destination_form_id = form["form/id"]
-                        break
-            if sci["formid"] is not None and destination_form_id is None:
-                print(f"could not find source_form={sci['formid']} from {destination}, skipping this item")
-                break
+                destination_resource_id = None
+                if sci["resource-id"] is not None:
+                    source_resource = get_resource(config, source, sci["resource-id"])
+                    for resource in destination_resources:
+                        if resource["resid"] == source_resource["resid"]:
+                            destination_resource_id = resource["id"]
+                            break
+                if sci["resource-id"] is not None and destination_resource_id is None:
+                    print(f"could not find source_resource={sci['resource-id']} from {destination}, skipping this item")
+                    break
 
-            destination_resource_id = None
-            if sci["resource-id"] is not None:
-                source_resource = get_resource(config, source, sci["resource-id"])
-                for resource in destination_resources:
-                    if resource["resid"] == source_resource["resid"]:
-                        destination_resource_id = resource["id"]
-                        break
-            if sci["resource-id"] is not None and destination_resource_id is None:
-                print(f"could not find source_resource={sci['resource-id']} from {destination}, skipping this item")
-                break
+                destination_workflow_id = None
+                if sci["wfid"] is not None:
+                    source_workflow = get_workflow(config, source, sci["wfid"])
+                    for workflow in destination_workflows:
+                        if workflow["title"] == source_workflow["title"]:
+                            destination_workflow_id = workflow["id"]
+                            break
+                if sci["wfid"] is not None and destination_workflow_id is None:
+                    print(f"could not find source_workflow={sci['wfid']} from {destination}, skipping this item")
+                    break
 
-            destination_workflow_id = None
-            if sci["wfid"] is not None:
-                source_workflow = get_workflow(config, source, sci["wfid"])
-                for workflow in destination_workflows:
-                    if workflow["title"] == source_workflow["title"]:
-                        destination_workflow_id = workflow["id"]
-                        break
-            if sci["wfid"] is not None and destination_workflow_id is None:
-                print(f"could not find source_workflow={sci['wfid']} from {destination}, skipping this item")
-                break
-
-            catalogue_data = create_catalogue_item_data(
-                form_id=destination_form_id,
-                resource_id=destination_resource_id,
-                workflow_id=destination_workflow_id,
-                organisation=config[destination]["organisation"],
-                titles=sci["localizations"],
-            )
-            post_catalogue_item(config, catalogue_data, destination)
+                catalogue_data = create_catalogue_item_data(
+                    form_id=destination_form_id,
+                    resource_id=destination_resource_id,
+                    workflow_id=destination_workflow_id,
+                    organisation=config[destination]["organisation"],
+                    titles=sci["localizations"],
+                )
+                post_catalogue_item(config, catalogue_data, destination)
             created.append(sci["localizations"][config["language"]]["title"])
         else:
             skipped.append(sci["localizations"][config["language"]]["title"])
